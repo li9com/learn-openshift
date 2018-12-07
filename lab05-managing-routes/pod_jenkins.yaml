@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: jenkins
+  labels:
+    app: jenkins
+spec:
+  containers:
+    - image: docker.io/openshift/jenkins-2-centos7
+      name: jenkins
+      ports:
+        - containerPort: 8080
