@@ -1,7 +1,7 @@
 # lab01-lab-environment-overview
 Lab 1 - Overview of the lab environment
 
-# Accessing VM
+## Accessing VM
 - You may deploy the lab environment using the following command
 
 ```
@@ -139,3 +139,25 @@ system:admin
 Note! We need to use the root user account
 
 
+## Accessing OpenShift Web console
+
+- Check cluster status and look for OpenShift console URL
+
+```
+[root@openshift ~]# oc cluster status
+Web console URL: https://openshift.172.24.0.11.nip.io:8443/console/
+
+Config is at host directory
+Volumes are at host directory
+Persistent volumes are at host directory /home/vagrant/openshift.local.clusterup/openshift.local.pv
+Data will be discarded when cluster is destroyed
+
+```
+
+Note! you need to run the command under root user
+
+- Try to access openshift web console using the url:
+
+```
+https://openshift.172.24.0.11.nip.io:8443/console/
+```
