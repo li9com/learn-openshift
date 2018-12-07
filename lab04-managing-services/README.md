@@ -247,7 +247,7 @@ spec:
   type: ClusterIP
 status:
   loadBalancer: {}
-``
+```
 
 
 ## Adding the second pod
