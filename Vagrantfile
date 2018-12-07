@@ -24,6 +24,7 @@ cat << EOF >/etc/docker/daemon.json
    ]
 }
 EOF
+groupadd docker
 usermod -s /bin/bash -aG docker vagrant
 
 systemctl start --now docker
