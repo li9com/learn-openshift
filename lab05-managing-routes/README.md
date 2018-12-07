@@ -160,6 +160,7 @@ route.route.openshift.io/jenkins exposed
 
 - Check that route has been created
 
+```
 [vagrant@openshift lab05-managing-routes]$ oc get route
 NAME      HOST/PORT                              PATH      SERVICES   PORT      TERMINATION   WILDCARD
 jenkins   jenkins-lab5.apps.172.24.0.11.nip.io             jenkins    8080                    None
