@@ -410,7 +410,7 @@ Note! They are almost the same
 
 
 
-## Deliting services
+## Deleting services
 
 - Delete both servicee using "oc delete svc"
 
