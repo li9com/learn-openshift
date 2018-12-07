@@ -11,7 +11,7 @@ It is assumed that all activities will be performed inside /vagrant/lab03-managi
 - Run the following command to change current directory
 
 ```
-cd /vagrant/lab03-managing-pods/pod_httpd.yaml
+cd /vagrant/lab03-managing-pods
 ```
 
 - Create a new project named "lab3-httpd"
