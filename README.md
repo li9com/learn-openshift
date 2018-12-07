@@ -9,6 +9,10 @@ Lab    | Description
 ------ | -----------
 Lab 0  | Creating lab environment (please see below)
 Lab 1  | Overview of the lab environment
+Lab 2  | Managing user projects
+Lab 3  | Managing Pods
+Lab 4  | Managing Services
+Lab 5  | Managing Routes 
 
 
 ## Creating lab environment
