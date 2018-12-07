@@ -252,18 +252,194 @@ status:
 
 ## Adding the second pod
 
-- Check pod_nginx1.yaml
+- Check pod_jenkins1.yaml
 
 ```
-cat pod_nginx1.yaml
+cat pod_jenkins1.yaml
 ```
 
 Note! Make sure that app label is set to "httpd"
+Note! We are now going to add a jenkins container with the same label app=httpd. This doens't make sense in the real world but it is still acceptable from the Lab perspective.
+Note! Again, this is incorrect for the real world. Do not perform that in production
 
-- Create the nginx pod
+- Create a jenkins pod
 
 ```
+[vagrant@openshift lab04-managing-services]$ oc create -f pod_jenkins1.yaml
+pod/jenkins1 created
 ```
 
+- Allow jenkins to start
+
+```
+[vagrant@openshift lab04-managing-services]$ oc get pod
+NAME       READY     STATUS    RESTARTS   AGE
+httpd1     1/1       Running   0          31m
+jenkins1   1/1       Running   0          1m
+```
+
+- Get Service IP address
+
+```
+[vagrant@openshift lab04-managing-services]$ oc get svc
+NAME      TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+httpd1    ClusterIP   172.30.221.123   <none>        8080/TCP   34m
+```
+
+
+- Make sure that traffic is load balanced between both pods with app=httpd label (jenkins1 and httpd1). You need to run several times the following command and compare the output
+Note! It doesn't make sense to compare exact output. We need 2 different containers to only demonstrate that traffic is load balanced
+
+```
+curl -sI  172.30.221.123:8080|grep Server
+```
+
+You may see the following example output:
+
+```
+[vagrant@openshift lab04-managing-services]$ curl -sI  172.30.221.123:8080|grep Server
+Server: Jetty(9.4.z-SNAPSHOT)
+[vagrant@openshift lab04-managing-services]$ curl -sI  172.30.221.123:8080|grep Server
+Server: Apache/2.4.34 (Red Hat) OpenSSL/1.0.2k-fips
+[vagrant@openshift lab04-managing-services]$ curl -sI  172.30.221.123:8080|grep Server
+Server: Apache/2.4.34 (Red Hat) OpenSSL/1.0.2k-fips
+[vagrant@openshift lab04-managing-services]$ curl -sI  172.30.221.123:8080|grep Server
+Server: Apache/2.4.34 (Red Hat) OpenSSL/1.0.2k-fips
+[vagrant@openshift lab04-managing-services]$ curl -sI  172.30.221.123:8080|grep Server
+Server: Apache/2.4.34 (Red Hat) OpenSSL/1.0.2k-fips
+[vagrant@openshift lab04-managing-services]$ curl -sI  172.30.221.123:8080|grep Server
+Server: Jetty(9.4.z-SNAPSHOT)
+[vagrant@openshift lab04-managing-services]$ curl -sI  172.30.221.123:8080|grep Server
+Server: Jetty(9.4.z-SNAPSHOT)
+[vagrant@openshift lab04-managing-services]$ curl -sI  172.30.221.123:8080|grep Server
+Server: Apache/2.4.34 (Red Hat) OpenSSL/1.0.2k-fips
+```
+
+- Delete jenkins1 pod and make sure that service returns only httpd answer
+
+```
+[vagrant@openshift lab04-managing-services]$ oc delete pod jenkins1
+pod "jenkins1" deleted
+[vagrant@openshift lab04-managing-services]$ oc get pod
+NAME      READY     STATUS    RESTARTS   AGE
+httpd1    1/1       Running   0          39m
+[vagrant@openshift lab04-managing-services]$ curl -sI  172.30.221.123:8080|grep Server
+Server: Apache/2.4.34 (Red Hat) OpenSSL/1.0.2k-fips
+[vagrant@openshift lab04-managing-services]$ curl -sI  172.30.221.123:8080|grep Server
+Server: Apache/2.4.34 (Red Hat) OpenSSL/1.0.2k-fips
+[vagrant@openshift lab04-managing-services]$ curl -sI  172.30.221.123:8080|grep Server
+Server: Apache/2.4.34 (Red Hat) OpenSSL/1.0.2k-fips
+[vagrant@openshift lab04-managing-services]$ curl -sI  172.30.221.123:8080|grep Server
+Server: Apache/2.4.34 (Red Hat) OpenSSL/1.0.2k-fips
+[vagrant@openshift lab04-managing-services]$ curl -sI  172.30.221.123:8080|grep Server
+Server: Apache/2.4.34 (Red Hat) OpenSSL/1.0.2k-fips
+[vagrant@openshift lab04-managing-services]$ curl -sI  172.30.221.123:8080|grep Server
+Server: Apache/2.4.34 (Red Hat) OpenSSL/1.0.2k-fips
+[vagrant@openshift lab04-managing-services]$ curl -sI  172.30.221.123:8080|grep Server
+Server: Apache/2.4.34 (Red Hat) OpenSSL/1.0.2k-fips
+[vagrant@openshift lab04-managing-services]$ curl -sI  172.30.221.123:8080|grep Server
+Server: Apache/2.4.34 (Red Hat) OpenSSL/1.0.2k-fips
+[vagrant@openshift lab04-managing-services]$ curl -sI  172.30.221.123:8080|grep Server
+Server: Apache/2.4.34 (Red Hat) OpenSSL/1.0.2k-fips
+[vagrant@openshift lab04-managing-services]$ curl -sI  172.30.221.123:8080|grep Server
+Server: Apache/2.4.34 (Red Hat) OpenSSL/1.0.2k-fips
+```
+
+Note! We tried many times and we have not seen any jenkins answers
+
+
+## Creating services manually
+
+- Check service_httpd.yaml
+
+```
+cat service_httpd.yaml
+```
+
+Note! service_httpd.yaml defines a service named httpd which uses app=httpd as the selector
+
+- Create  the httpd service
+Note! We already have http1 service
+
+```
+[vagrant@openshift lab04-managing-services]$ oc create -f service_httpd.yaml
+service/httpd created
+
+[vagrant@openshift lab04-managing-services]$ oc get svc
+NAME      TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+httpd     ClusterIP   172.30.193.228   <none>        8080/TCP   3s
+httpd1    ClusterIP   172.30.221.123   <none>        8080/TCP   41m
+```
+
+- Compare both services
+
+```
+[vagrant@openshift lab04-managing-services]$ oc describe svc httpd
+Name:              httpd
+Namespace:         lab4
+Labels:            app=httpd
+Annotations:       <none>
+Selector:          app=httpd
+Type:              ClusterIP
+IP:                172.30.193.228
+Port:              <unset>  8080/TCP
+TargetPort:        8080/TCP
+Endpoints:         172.17.0.6:8080
+Session Affinity:  None
+Events:            <none>
+
+
+
+[vagrant@openshift lab04-managing-services]$ oc describe svc httpd1
+Name:              httpd1
+Namespace:         lab4
+Labels:            app=httpd
+Annotations:       <none>
+Selector:          app=httpd
+Type:              ClusterIP
+IP:                172.30.221.123
+Port:              <unset>  8080/TCP
+TargetPort:        8080/TCP
+Endpoints:         172.17.0.6:8080
+Session Affinity:  None
+Events:            <none>
+
+```
+
+Note! They are almost the same
+
+
+
+## Deliting services
+
+- Delete both servicee using "oc delete svc"
+
+```
+[vagrant@openshift lab04-managing-services]$ oc get svc
+NAME      TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+httpd     ClusterIP   172.30.193.228   <none>        8080/TCP   3m
+httpd1    ClusterIP   172.30.221.123   <none>        8080/TCP   44m
+
+[vagrant@openshift lab04-managing-services]$ oc delete svc httpd
+service "httpd" deleted
+
+[vagrant@openshift lab04-managing-services]$ oc get svc
+NAME      TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+httpd1    ClusterIP   172.30.221.123   <none>        8080/TCP   44m
+
+[vagrant@openshift lab04-managing-services]$ oc delete svc httpd1
+service "httpd1" deleted
+
+[vagrant@openshift lab04-managing-services]$ oc get svc
+No resources found.
+```
+
+## Cleanup
+
+- Delete the project
+
+```
+oc delete project lab4
+```
 
 
