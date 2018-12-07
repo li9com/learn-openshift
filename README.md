@@ -8,20 +8,7 @@ The following labs are included
 Lab    | Description
 ------ | -----------
 Lab 0  | Creating lab environment (please see below)
-Lab 1  | Docker installation
-Lab 2  | 1
-Lab 3  | 
-Lab 4  | Manaing images
-Lab 5  | Managing containers
-Lab 6  | Using environment variables
-Lab 7  | Using persistent storage
-Lab 8  | Starting multicontainer applications
-Lab 9  | Starting private registry
-Lab 10 | Creating new images by docker commit
-Lab 11 | Creating a simple Dockerfile
-Lab 12 | Importing and exporting images
-Lab 13 | Advanced Dockerfile
-Lab 14 | Containerizing Jboss EAP
+Lab 1  | Overview of the lab environment
 
 
 ## Creating lab environment
