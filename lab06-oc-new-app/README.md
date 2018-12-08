@@ -272,7 +272,7 @@ mysql
   Tags:     latest
 ```
 
-## Create a basic application using oc new-app
+## Deploy a basic application using oc new-app
 
 - Search httpd-related images
 
@@ -295,7 +295,7 @@ httpd
 
 ```
 [vagrant@openshift lab06-oc-new-app]$ oc new-app httpd
---> Found image 7cbb148 (35 hours old) in image stream "openshift/httpd" under tag "2.4" for "httpd"
+--> Found image 7cbb148 (47 hours old) in image stream "openshift/httpd" under tag "2.4" for "httpd"
 
     Apache httpd 2.4
     ----------------
@@ -308,8 +308,8 @@ httpd
       * Other containers can access this service through the hostname "httpd"
 
 --> Creating resources ...
-    imagestreamtag.image.openshift.io "httpd:2.4" created
-    deploymentconfig.apps.openshift.io "httpd" created
+    imagestreamtag "httpd:2.4" created
+    deploymentconfig "httpd" created
     service "httpd" created
 --> Success
     Application is not exposed. You can expose services to the outside world by executing one or more of the commands below:
@@ -321,33 +321,405 @@ httpd
 
 ```
 [vagrant@openshift lab06-oc-new-app]$ oc get pod
-NAME             READY     STATUS             RESTARTS   AGE
-httpd-1-deploy   1/1       Running            0          23s
-httpd-1-whvd8    0/1       ImagePullBackOff   0          21s
+NAME            READY     STATUS    RESTARTS   AGE
+httpd-1-5nbw6   1/1       Running   0          21s
 ```
 
 - Check all entities created by oc new-app
 
 ```
 [vagrant@openshift lab06-oc-new-app]$ oc get all
-NAME                 READY     STATUS             RESTARTS   AGE
-pod/httpd-1-deploy   1/1       Running            0          1m
-pod/httpd-1-whvd8    0/1       ImagePullBackOff   0          1m
+NAME                      REVISION   DESIRED   CURRENT   TRIGGERED BY
+deploymentconfigs/httpd   1          1         1         config,image(httpd:2.4)
 
-NAME                            DESIRED   CURRENT   READY     AGE
-replicationcontroller/httpd-1   1         1         0         1m
+NAME                 DOCKER REPO                  TAGS      UPDATED
+imagestreams/httpd   172.30.1.1:5000/lab6/httpd   2.4
 
-NAME            TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)             AGE
-service/httpd   ClusterIP   172.30.31.84   <none>        8080/TCP,8443/TCP   1m
+NAME               READY     STATUS    RESTARTS   AGE
+po/httpd-1-5nbw6   1/1       Running   0          41s
 
-NAME                                       REVISION   DESIRED   CURRENT   TRIGGERED BY
-deploymentconfig.apps.openshift.io/httpd   1          1         1         config,image(httpd:2.4)
+NAME         DESIRED   CURRENT   READY     AGE
+rc/httpd-1   1         1         1         42s
 
-NAME                                   DOCKER REPO                  TAGS      UPDATED
-imagestream.image.openshift.io/httpd   172.30.1.1:5000/lab6/httpd   2.4
-
+NAME        TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)             AGE
+svc/httpd   ClusterIP   172.30.169.172   <none>        8080/TCP,8443/TCP   42s
 ```
 
 Note! you should be able to see pod,rc,svc,dc and is entities
 
+- Expose the httpd service
 
+```
+[vagrant@openshift lab06-oc-new-app]$ oc expose svc httpd
+route "httpd" exposed
+```
+
+- Make sure that route exists
+
+```
+[vagrant@openshift lab06-oc-new-app]$ oc get route
+NAME      HOST/PORT                            PATH      SERVICES   PORT       TERMINATION   WILDCARD
+httpd     httpd-lab6.apps.172.24.0.11.nip.io             httpd      8080-tcp                 None
+```
+
+- Try to access the application
+Note! It is up to you which method to use (curl or Web Browser)
+
+
+## Using environment variables
+
+- Try to create a mariadb application
+
+```
+[vagrant@openshift lab06-oc-new-app]$ oc new-app mariadb
+--> Found image 5e78488 (47 hours old) in image stream "openshift/mariadb" under tag "10.2" for "mariadb"
+
+    MariaDB 10.2
+    ------------
+    MariaDB is a multi-user, multi-threaded SQL database server. The container image provides a containerized packaging of the MariaDB mysqld daemon and client application. The mysqld server daemon accepts connections from clients and provides access to content from MariaDB databases on behalf of the clients.
+
+    Tags: database, mysql, mariadb, mariadb102, rh-mariadb102, galera
+
+    * This image will be deployed in deployment config "mariadb"
+    * Port 3306/tcp will be load balanced by service "mariadb"
+      * Other containers can access this service through the hostname "mariadb"
+    * This image declares volumes and will default to use non-persistent, host-local storage.
+      You can add persistent volumes later by running 'volume dc/mariadb --add ...'
+
+--> Creating resources ...
+    imagestreamtag "mariadb:10.2" created
+    deploymentconfig "mariadb" created
+    service "mariadb" created
+--> Success
+    Application is not exposed. You can expose services to the outside world by executing one or more of the commands below:
+     'oc expose svc/mariadb'
+    Run 'oc status' to view your app.
+```
+
+- Check the mariadb pod status
+
+```
+[vagrant@openshift lab06-oc-new-app]$ oc get pod
+NAME              READY     STATUS             RESTARTS   AGE
+httpd-1-5nbw6     1/1       Running            0          5m
+mariadb-1-z5ljm   0/1       CrashLoopBackOff   3          1m
+```
+
+- Display mariadb pod logs
+
+```
+[vagrant@openshift lab06-oc-new-app]$ oc logs mariadb-1-z5ljm
+=> sourcing 20-validate-variables.sh ...
+You must either specify the following environment variables:
+  MYSQL_USER (regex: '^[a-zA-Z0-9_]+$')
+  MYSQL_PASSWORD (regex: '^[a-zA-Z0-9_~!@#$%^&*()-=<>,.?;:|]+$')
+  MYSQL_DATABASE (regex: '^[a-zA-Z0-9_]+$')
+Or the following environment variable:
+  MYSQL_ROOT_PASSWORD (regex: '^[a-zA-Z0-9_~!@#$%^&*()-=<>,.?;:|]+$')
+Or both.
+Optional Settings:
+  MYSQL_LOWER_CASE_TABLE_NAMES (default: 0)
+  MYSQL_LOG_QUERIES_ENABLED (default: 0)
+  MYSQL_MAX_CONNECTIONS (default: 151)
+  MYSQL_FT_MIN_WORD_LEN (default: 4)
+  MYSQL_FT_MAX_WORD_LEN (default: 20)
+  MYSQL_AIO (default: 1)
+  MYSQL_KEY_BUFFER_SIZE (default: 32M or 10% of available memory)
+  MYSQL_MAX_ALLOWED_PACKET (default: 200M)
+  MYSQL_TABLE_OPEN_CACHE (default: 400)
+  MYSQL_SORT_BUFFER_SIZE (default: 256K)
+  MYSQL_READ_BUFFER_SIZE (default: 8M or 5% of available memory)
+  MYSQL_INNODB_BUFFER_POOL_SIZE (default: 32M or 50% of available memory)
+  MYSQL_INNODB_LOG_FILE_SIZE (default: 8M or 15% of available memory)
+  MYSQL_INNODB_LOG_BUFFER_SIZE (default: 8M or 15% of available memory)
+For more information, see https://github.com/sclorg/mariadb-container
+```
+
+Note! the container requires a number of environent variables to start
+
+-  Display all entities created for the service
+
+```
+[vagrant@openshift lab06-oc-new-app]$ oc get all -l app=mariadb
+NAME                        REVISION   DESIRED   CURRENT   TRIGGERED BY
+deploymentconfigs/mariadb   1          1         1         config,image(mariadb:10.2)
+
+NAME                 READY     STATUS             RESTARTS   AGE
+po/mariadb-1-z5ljm   0/1       CrashLoopBackOff   5          3m
+
+NAME           DESIRED   CURRENT   READY     AGE
+rc/mariadb-1   1         1         0         3m
+
+NAME          TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
+svc/mariadb   ClusterIP   172.30.182.4   <none>        3306/TCP   3m
+```
+
+- Delete all mariadb entities
+
+```
+[vagrant@openshift lab06-oc-new-app]$ oc delete all -l app=mariadb
+deploymentconfig "mariadb" deleted
+pod "mariadb-1-z5ljm" deleted
+service "mariadb" deleted
+```
+
+- Delete the "mariadb" image stream
+
+```
+[vagrant@openshift lab06-oc-new-app]$ oc delete is mariadb
+imagestream "mariadb" deleted
+```
+
+Note! the "is" resource is not deleted automatically.
+
+- Re-deploy mariadb service with all parameters
+
+```
+[vagrant@openshift lab06-oc-new-app]$ oc new-app -e MYSQL_USER=myuser -e MYSQL_PASSWORD=secret -e MYSQL_DATABASE=db1 mariadb
+--> Found image 5e78488 (47 hours old) in image stream "openshift/mariadb" under tag "10.2" for "mariadb"
+
+    MariaDB 10.2
+    ------------
+    MariaDB is a multi-user, multi-threaded SQL database server. The container image provides a containerized packaging of the MariaDB mysqld daemon and client application. The mysqld server daemon accepts connections from clients and provides access to content from MariaDB databases on behalf of the clients.
+
+    Tags: database, mysql, mariadb, mariadb102, rh-mariadb102, galera
+
+    * This image will be deployed in deployment config "mariadb"
+    * Port 3306/tcp will be load balanced by service "mariadb"
+      * Other containers can access this service through the hostname "mariadb"
+    * This image declares volumes and will default to use non-persistent, host-local storage.
+      You can add persistent volumes later by running 'volume dc/mariadb --add ...'
+
+--> Creating resources ...
+    imagestreamtag "mariadb:10.2" created
+    deploymentconfig "mariadb" created
+    service "mariadb" created
+--> Success
+    Application is not exposed. You can expose services to the outside world by executing one or more of the commands below:
+     'oc expose svc/mariadb'
+    Run 'oc status' to view your app.
+```
+
+- Make sure that the mariadb pod works
+
+```
+[vagrant@openshift lab06-oc-new-app]$ oc get pod
+NAME              READY     STATUS    RESTARTS   AGE
+httpd-1-5nbw6     1/1       Running   0          21m
+mariadb-1-tx4xk   1/1       Running   0          4m
+
+[vagrant@openshift lab06-oc-new-app]$ oc exec -it mariadb-1-tx4xk -- /opt/rh/rh-mariadb102/root/usr/bin/mysql -umyuser -psecret -h127.0.0.1 db1 -e 'show databases'
++--------------------+
+| Database           |
++--------------------+
+| db1                |
+| information_schema |
+| test               |
++--------------------+
+```
+
+## Understanding deployment config
+
+- List available deployment configs
+
+```
+[vagrant@openshift lab06-oc-new-app]$ oc get dc
+NAME      REVISION   DESIRED   CURRENT   TRIGGERED BY
+httpd     1          1         1         config,image(httpd:2.4)
+mariadb   1          1         1         config,image(mariadb:10.2)
+```
+
+- Gather details of the mariadb deployment config
+
+```
+[vagrant@openshift lab06-oc-new-app]$ oc describe dc mariadb
+Name:		mariadb
+Namespace:	lab6
+Created:	7 minutes ago
+Labels:		app=mariadb
+Annotations:	openshift.io/generated-by=OpenShiftNewApp
+Latest Version:	1
+Selector:	app=mariadb,deploymentconfig=mariadb
+Replicas:	1
+Triggers:	Config, Image(mariadb@10.2, auto=true)
+Strategy:	Rolling
+Template:
+Pod Template:
+  Labels:	app=mariadb
+		deploymentconfig=mariadb
+  Annotations:	openshift.io/generated-by=OpenShiftNewApp
+  Containers:
+   mariadb:
+    Image:	docker.io/centos/mariadb-102-centos7@sha256:e49daf523098e87b04c86c4a6dc0d6c4e192db663bf51a4df37771e2190000bd
+    Port:	3306/TCP
+    Environment:
+      MYSQL_DATABASE:	db1
+      MYSQL_PASSWORD:	secret
+      MYSQL_USER:	myuser
+    Mounts:
+      /var/lib/mysql/data from mariadb-volume-1 (rw)
+  Volumes:
+   mariadb-volume-1:
+    Type:	EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:
+
+Deployment #1 (latest):
+	Name:		mariadb-1
+	Created:	7 minutes ago
+	Status:		Complete
+	Replicas:	1 current / 1 desired
+	Selector:	app=mariadb,deployment=mariadb-1,deploymentconfig=mariadb
+	Labels:		app=mariadb,openshift.io/deployment-config.name=mariadb
+	Pods Status:	1 Running / 0 Waiting / 0 Succeeded / 0 Failed
+
+Events:
+  Type		Reason			Age	From				Message
+  ----		------			----	----				-------
+  Normal	DeploymentCreated	7m	deploymentconfig-controller	Created new replication controller "mariadb-1" for version 1
+```
+
+Note! You can see environment variables
+
+- Update mariadb deployment config as follows
+
+```
+[vagrant@openshift lab06-oc-new-app]$ oc edit dc mariadb
+```
+
+in the vi editor update environment variables to the following
+
+```
+<OMITTED>
+    spec:
+      containers:
+      - env:
+        - name: MYSQL_DATABASE
+          value: db1_new
+        - name: MYSQL_PASSWORD
+          value: secret_new
+        - name: MYSQL_USER
+          value: myuser_new
+<OMITTED>
+```
+save and exit
+
+- Make sure that deployment config version has been increased
+
+```
+[vagrant@openshift lab06-oc-new-app]$ oc get dc
+NAME      REVISION   DESIRED   CURRENT   TRIGGERED BY
+httpd     1          1         1         config,image(httpd:2.4)
+mariadb   2          1         1         config,image(mariadb:10.2)
+```
+
+- Make sure that pod has been recreated
+
+```
+[vagrant@openshift lab06-oc-new-app]$ oc get pod
+NAME              READY     STATUS    RESTARTS   AGE
+httpd-1-5nbw6     1/1       Running   0          28m
+mariadb-2-jr6t7   1/1       Running   0          3m
+```
+
+- Try to access the pod using new username/password and database
+
+```
+[vagrant@openshift lab06-oc-new-app]$ oc exec -it mariadb-2-jr6t7 -- /opt/rh/rh-mariadb102/root/usr/bin/mysql -umyuser_new -psecret_new -h127.0.0.1 db1_new -e 'show databases'
++--------------------+
+| Database           |
++--------------------+
+| db1_new            |
+| information_schema |
+| test               |
++--------------------+
+```
+
+## Redeploy application from the deployment config
+
+- Make sure that both applications are running
+
+```
+[vagrant@openshift lab06-oc-new-app]$ oc get dc
+NAME      REVISION   DESIRED   CURRENT   TRIGGERED BY
+httpd     1          1         1         config,image(httpd:2.4)
+mariadb   2          1         1         config,image(mariadb:10.2)
+
+[vagrant@openshift lab06-oc-new-app]$ oc get pod
+NAME              READY     STATUS    RESTARTS   AGE
+httpd-1-5nbw6     1/1       Running   0          31m
+mariadb-2-jr6t7   1/1       Running   0          6m
+```
+
+- Redeploy the mariadb application
+
+```
+[vagrant@openshift lab06-oc-new-app]$ oc rollout latest mariadb
+deploymentconfig "mariadb" rolled out
+```
+
+- Make sure that revision has been increased
+
+```
+[vagrant@openshift lab06-oc-new-app]$ oc get dc
+NAME      REVISION   DESIRED   CURRENT   TRIGGERED BY
+httpd     1          1         1         config,image(httpd:2.4)
+mariadb   3          1         1         config,image(mariadb:10.2)
+```
+
+Note! new revision is 3
+
+- Make sure that application has been redeployed
+
+```
+[vagrant@openshift lab06-oc-new-app]$ oc get pod
+NAME              READY     STATUS    RESTARTS   AGE
+httpd-1-5nbw6     1/1       Running   0          33m
+mariadb-3-mgg29   1/1       Running   0          53s
+```
+
+Note! the number "-3-" in the mariadb name represents revision number
+
+## Scale up and scale down applications
+
+- Increase number of httpd pods to 3
+
+```
+[vagrant@openshift lab06-oc-new-app]$ oc scale dc httpd --replicas=3
+deploymentconfig "httpd" scaled
+```
+
+- Make sure that desired number of replicas is 3
+
+```
+[vagrant@openshift lab06-oc-new-app]$ oc get dc
+NAME      REVISION   DESIRED   CURRENT   TRIGGERED BY
+httpd     1          3         3         config,image(httpd:2.4)
+mariadb   3          1         1         config,image(mariadb:10.2)
+```
+
+- Check the number of httpd replicas
+
+```
+[vagrant@openshift lab06-oc-new-app]$ oc get pod
+NAME              READY     STATUS    RESTARTS   AGE
+httpd-1-5nbw6     1/1       Running   0          39m
+httpd-1-fwdnv     1/1       Running   0          2s
+httpd-1-rqjlv     1/1       Running   0          2s
+mariadb-3-mgg29   1/1       Running   0          7m
+```
+
+- Scale down the httpd application
+
+```
+[vagrant@openshift lab06-oc-new-app]$ oc scale dc httpd --replicas=2
+deploymentconfig "httpd" scaled
+[vagrant@openshift lab06-oc-new-app]$ oc get dc
+NAME      REVISION   DESIRED   CURRENT   TRIGGERED BY
+httpd     1          2         2         config,image(httpd:2.4)
+mariadb   3          1         1         config,image(mariadb:10.2)
+[vagrant@openshift lab06-oc-new-app]$ oc get pod
+NAME              READY     STATUS    RESTARTS   AGE
+httpd-1-5nbw6     1/1       Running   0          41m
+httpd-1-fwdnv     1/1       Running   0          1m
+mariadb-3-mgg29   1/1       Running   0          9m
+```
