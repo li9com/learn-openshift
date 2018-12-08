@@ -221,7 +221,6 @@ mariadb-1-2p2zz   0/1       Error     3          49s
 deploymentconfig "mariadb" updated
 ```
 
-
 - Make sure that mariadb application has been redeployed
 
 ```
@@ -253,4 +252,191 @@ MYSQL_PREFIX=/opt/rh/rh-mariadb102/root/usr
 Note! These variables has been taken from the secret
 
 
+## Creating config maps
+In this example, we will mount config map as a file on the filesystem. This may be useful for application configuration
 
+- Delete all OpenShift entities created previosly
+
+```
+[vagrant@openshift lab07-injecting-configuration-data]$ oc delete all --all
+deploymentconfig "mariadb" deleted
+imagestream "mariadb" deleted
+pod "mariadb-2-j4c42" deleted
+service "mariadb" deleted
+```
+
+- Check the "index.html" file
+
+```
+cat index.html
+```
+
+- Create a config map named "cm1" from index.html
+
+```
+[vagrant@openshift lab07-injecting-configuration-data]$ oc create cm cm1 --from-file index.html
+configmap "cm1" created
+```
+
+- Make sure that config map "cm1" has been created and contains correct data
+
+```
+[vagrant@openshift lab07-injecting-configuration-data]$ oc get cm
+NAME      DATA      AGE
+cm1       1         3s
+
+
+[vagrant@openshift lab07-injecting-configuration-data]$ oc describe cm cm1
+Name:         cm1
+Namespace:    lab7
+Labels:       <none>
+Annotations:  <none>
+
+Data
+====
+index.html:
+----
+<HTML><HEAD><TITLE>Config map test page</TITLE></HEAD>
+<BODY>
+<H1>If you can see this page - config map works!</H1>
+</BODY></HTML>
+
+
+Events:  <none>
+```
+
+- Display config map runtime data
+
+```
+[vagrant@openshift lab07-injecting-configuration-data]$ oc get cm cm1 -o yaml
+apiVersion: v1
+data:
+  index.html: |+
+    <HTML><HEAD><TITLE>Config map test page</TITLE></HEAD>
+    <BODY>
+    <H1>If you can see this page - config map works!</H1>
+    </BODY></HTML>
+
+kind: ConfigMap
+metadata:
+  creationTimestamp: 2018-12-08T03:07:48Z
+  name: cm1
+  namespace: lab7
+  resourceVersion: "13559"
+  selfLink: /api/v1/namespaces/lab7/configmaps/cm1
+  uid: 71667f50-fa96-11e8-914e-525400c042d5
+```
+
+- Deploy an httpd service
+
+```
+[vagrant@openshift lab07-injecting-configuration-data]$ oc new-app httpd
+
+
+[vagrant@openshift lab07-injecting-configuration-data]$ oc get pod
+NAME            READY     STATUS    RESTARTS   AGE
+httpd-1-p2cjj   1/1       Running   0          4s
+```
+
+- Mount config map cm1 as a file using the following syntax
+
+```
+oc set volumes dc/httpd --add -t configmap  -m /var/www/html --configmap-name cm1
+```
+
+This should work as follows
+
+```
+[vagrant@openshift lab07-injecting-configuration-data]$ oc set volumes dc/httpd --add -t configmap  -m /var/www/html --configmap-name cm1
+info: Generated volume name: volume-xjkkr
+deploymentconfig "httpd" updated
+```
+
+- Make sure that the httpd appliation has been redeployed.
+
+```
+[vagrant@openshift lab07-injecting-configuration-data]$ oc get dc
+NAME      REVISION   DESIRED   CURRENT   TRIGGERED BY
+httpd     2          1         1         config,image(httpd:2.4)
+
+[vagrant@openshift lab07-injecting-configuration-data]$ oc get pod
+NAME            READY     STATUS    RESTARTS   AGE
+httpd-2-t7rw9   1/1       Running   0          6s
+```
+
+- Gather service address
+
+```
+[vagrant@openshift lab07-injecting-configuration-data]$ oc describe svc|grep IP:
+IP:                172.30.227.127
+```
+
+- Access the service IP
+
+```
+[vagrant@openshift lab07-injecting-configuration-data]$ curl 172.30.227.127:8080
+<HTML><HEAD><TITLE>Config map test page</TITLE></HEAD>
+<BODY>
+<H1>If you can see this page - config map works!</H1>
+</BODY></HTML>
+```
+
+- Display deployment config
+
+```
+[vagrant@openshift lab07-injecting-configuration-data]$ oc describe dc httpd
+Name:		httpd
+Namespace:	lab7
+Created:	3 minutes ago
+Labels:		app=httpd
+Annotations:	openshift.io/generated-by=OpenShiftNewApp
+Latest Version:	2
+Selector:	app=httpd,deploymentconfig=httpd
+Replicas:	1
+Triggers:	Config, Image(httpd@2.4, auto=true)
+Strategy:	Rolling
+Template:
+Pod Template:
+  Labels:	app=httpd
+		deploymentconfig=httpd
+  Annotations:	openshift.io/generated-by=OpenShiftNewApp
+  Containers:
+   httpd:
+    Image:		docker.io/centos/httpd-24-centos7@sha256:f6393681ec205974a68386ac21e4ec2b76d42bfc885872ab8718f66826f95e68
+    Ports:		8080/TCP, 8443/TCP
+    Environment:	<none>
+    Mounts:
+      /var/www/html from volume-xjkkr (rw)
+  Volumes:
+   volume-xjkkr:
+    Type:	ConfigMap (a volume populated by a ConfigMap)
+    Name:	cm1
+    Optional:	false
+
+Deployment #2 (latest):
+	Name:		httpd-2
+	Created:	2 minutes ago
+	Status:		Complete
+	Replicas:	1 current / 1 desired
+	Selector:	app=httpd,deployment=httpd-2,deploymentconfig=httpd
+	Labels:		app=httpd,openshift.io/deployment-config.name=httpd
+	Pods Status:	1 Running / 0 Waiting / 0 Succeeded / 0 Failed
+Deployment #1:
+	Created:	3 minutes ago
+	Status:		Complete
+	Replicas:	0 current / 0 desired
+
+Events:
+  Type		Reason			Age	From				Message
+  ----		------			----	----				-------
+  Normal	DeploymentCreated	3m	deploymentconfig-controller	Created new replication controller "httpd-1" for version 1
+  Normal	DeploymentCreated	2m	deploymentconfig-controller	Created new replication controller "httpd-2" for version 2
+```
+
+Note! This has been mounted as volume
+
+## Cleanup
+
+```
+oc delete lab7
+```
