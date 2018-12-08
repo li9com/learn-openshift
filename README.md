@@ -16,6 +16,8 @@ Lab 5  | Managing Routes
 Lab 6  | Application deployment with oc new-app
 Lab 7  | Injecting configuration data using config maps and secrets 
 Lab 8  | Using OpenShift templates
+Lab 9  | Using persistent storage
+
 
 
 ## Creating lab environment
@@ -38,7 +40,7 @@ The VM is customized as follows:
 - docker and git packages are installed
 - docker Linux groups is created
 - the vagrant user is a member of the docker Linux group (this allows to use Docker client under unprivileges user)
-- OpenShift 3.11 repository is configured
+- OpenShift 3.9 repository is configured
 - OpenShift client utility is installed
 - OpebShift cluster is deployed using "oc cluster up"
 
