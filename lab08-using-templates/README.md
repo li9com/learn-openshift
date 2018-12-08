@@ -426,10 +426,241 @@ gogs      gogs.apps.172.24.0.11.nip.io             gogs       <all>             
 Note! You should see the "Gogs - Go Git Service" page
 
 
+## Exporting existing resoures as a template
+
+- Create an httpd application
+
+```
+oc new-app httpd
+```
+
+- Make sure that all resoures have been created
+
+```
+[vagrant@openshift lab08-using-templates]$ oc get all
+NAME                      REVISION   DESIRED   CURRENT   TRIGGERED BY
+deploymentconfigs/httpd   1          1         1         config,image(httpd:2.4)
+
+NAME                 DOCKER REPO                  TAGS      UPDATED
+imagestreams/httpd   172.30.1.1:5000/lab8/httpd   2.4
+
+NAME               READY     STATUS    RESTARTS   AGE
+po/httpd-1-mc8xm   1/1       Running   0          52s
+
+NAME         DESIRED   CURRENT   READY     AGE
+rc/httpd-1   1         1         1         53s
+
+NAME        TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)             AGE
+svc/httpd   ClusterIP   172.30.187.183   <none>        8080/TCP,8443/TCP   54s
+```
+
+- Expose the httpd service. Make sure that route exists
+
+```
+[vagrant@openshift lab08-using-templates]$ oc expose svc httpd
+route "httpd" exposed
+
+[vagrant@openshift lab08-using-templates]$ oc get route
+NAME      HOST/PORT                            PATH      SERVICES   PORT       TERMINATION   WILDCARD
+httpd     httpd-lab8.apps.172.24.0.11.nip.io             httpd      8080-tcp                 None
+```
+
+- Export all resoures as a template
+
+```
+[vagrant@openshift lab08-using-templates]$ oc export dc,svc,route --as-template=my_httpd > myhttpd_template.yaml
+```
+
+- Check the template file
+
+```
+[vagrant@openshift lab08-using-templates]$ cat myhttpd_template.yaml
+apiVersion: v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: my_httpd
+objects:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: httpd
+    name: httpd
+  spec:
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      app: httpd
+      deploymentconfig: httpd
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        annotations:
+          openshift.io/generated-by: OpenShiftNewApp
+        creationTimestamp: null
+        labels:
+          app: httpd
+          deploymentconfig: httpd
+      spec:
+        containers:
+        - image: docker.io/centos/httpd-24-centos7@sha256:f6393681ec205974a68386ac21e4ec2b76d42bfc885872ab8718f66826f95e68
+          imagePullPolicy: IfNotPresent
+          name: httpd
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          - containerPort: 8443
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - httpd
+        from:
+          kind: ImageStreamTag
+          name: httpd:2.4
+          namespace: openshift
+      type: ImageChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    labels:
+      app: httpd
+    name: httpd
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    - name: 8443-tcp
+      port: 8443
+      protocol: TCP
+      targetPort: 8443
+    selector:
+      app: httpd
+      deploymentconfig: httpd
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      openshift.io/host.generated: "true"
+    creationTimestamp: null
+    labels:
+      app: httpd
+    name: httpd
+  spec:
+    host: httpd-lab8.apps.172.24.0.11.nip.io
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: httpd
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2018-12-08T04:25:47Z
+        status: "True"
+        type: Admitted
+      host: httpd-lab8.apps.172.24.0.11.nip.io
+      routerName: router
+      wildcardPolicy: None
+```
+
+- Delete all resources
+
+```
+oc delete all --all
+```
+
+- Create a new project "lab8-httpd"
+
+```
+oc new-project lab8-httpd
+```
+
+- Deploy application from the template file
+
+```
+[vagrant@openshift lab08-using-templates]$ oc new-app -f myhttpd_template.yaml
+--> Deploying template "lab8-httpd/my_httpd" for "myhttpd_template.yaml" to project lab8-httpd
+
+--> Creating resources ...
+    deploymentconfig "httpd" created
+    service "httpd" created
+    route "httpd" created
+--> Success
+    Access your application via route 'httpd-lab8.apps.172.24.0.11.nip.io'
+    Run 'oc status' to view your app.
+```
+
+- Make sure that all resources have been created
+
+```
+[vagrant@openshift lab08-using-templates]$ oc get all
+NAME                      REVISION   DESIRED   CURRENT   TRIGGERED BY
+deploymentconfigs/httpd   1          1         1         config,image(httpd:2.4)
+
+NAME           HOST/PORT                            PATH      SERVICES   PORT       TERMINATION   WILDCARD
+routes/httpd   httpd-lab8.apps.172.24.0.11.nip.io             httpd      8080-tcp                 None
+
+NAME               READY     STATUS    RESTARTS   AGE
+po/httpd-1-r9zcg   1/1       Running   0          25s
+
+NAME         DESIRED   CURRENT   READY     AGE
+rc/httpd-1   1         1         1         26s
+
+NAME        TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)             AGE
+svc/httpd   ClusterIP   172.30.38.25   <none>        8080/TCP,8443/TCP   27s
+```
+
+- Make sure that application is accessible
+
 ## Cleanup
 
 ```
 oc delete project lab8
+oc delete project lab8-httpd
 ```
 
 
