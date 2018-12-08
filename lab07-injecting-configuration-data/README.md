@@ -178,7 +178,7 @@ secret "myfile-secret" created
 [vagrant@openshift lab07-injecting-configuration-data]$ oc get secret myfile-secret
 NAME            TYPE      DATA      AGE
 myfile-secret   Opaque    3         6s
-``
+```
 
 - Gather secret details
 
