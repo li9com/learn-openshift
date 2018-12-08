@@ -14,6 +14,8 @@ Lab 3  | Managing Pods
 Lab 4  | Managing Services
 Lab 5  | Managing Routes 
 Lab 6  | Application deployment with oc new-app
+Lab 7  | Injecting configuration data using config maps and secrets 
+Lab 8  | Using OpenShift templates
 
 
 ## Creating lab environment
