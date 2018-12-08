@@ -723,3 +723,11 @@ httpd-1-5nbw6     1/1       Running   0          41m
 httpd-1-fwdnv     1/1       Running   0          1m
 mariadb-3-mgg29   1/1       Running   0          9m
 ```
+
+
+## Cleanup
+
+```
+oc delete all --all
+oc delete project lab6
+```
