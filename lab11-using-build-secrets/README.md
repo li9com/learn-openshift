@@ -84,7 +84,7 @@ oc create secret generic gitlab-student-access \
     --from-literal=password=PASSWORD
 ```
 
-Note! ask for  PASWORD
+Note! ask for  PASSWORD
 
 You will see the following
 
