@@ -34,5 +34,5 @@ yum install -y centos-release-openshift-origin311
 yum install -y origin-clients
 oc cluster up \
    --public-hostname=openshift.172.24.0.11.nip.io \
-   --routing-suffix=vagrantapps.demo.li9.com
+   --routing-suffix=apps.172.24.0.11.nip.io
 SCRIPT
