@@ -1,7 +1,9 @@
 # lab01-lab-environment-overview
+
 Lab 1 - Overview of the lab environment
 
 ## Accessing VM
+
 - You may deploy the lab environment using the following command
 
 ```
@@ -37,7 +39,7 @@ origin-clients-3.11.0-1.el7.git.0.62803d0.x86_64
 docker-1.13.1-84.git07f3374.el7.centos.x86_64
 ```
 
-Note! it is expected that docker and origin-clients packages are installed
+Note! It is expected that docker and origin-clients packages are installed.
 
 - Check cluster status
 
@@ -51,7 +53,7 @@ Persistent volumes are at host directory /home/vagrant/openshift.local.clusterup
 Data will be discarded when cluster is destroyed
 ```
 
-Note! you need to run this command under the root account or using sudo as in the example above.
+Note! You need to run this command under the root account or using sudo as in the example above.
 
 - Make sure that the "oc" client is not connected to a cluster
 
@@ -66,7 +68,7 @@ error: Missing or incomplete configuration info.  Please login or point to an ex
 To view or setup config directly use the 'config' command.
 ```
 
-Note! it is expected that oc is not connected to the cluster under the "vagrant" user
+Note! It is expected that oc is not connected to the cluster under the "vagrant" user.
 
 - Connect to the OpenShift cluster installed on the local machine
 
@@ -102,7 +104,7 @@ student
 ```
 [vagrant@openshift ~]$ sudo oc whoami
 developer
-[vagrant@openshift ~]$ sudo su -
+[vagrant@openshift ~]$ sudo -i
 Last login: Thu Dec  6 23:32:50 UTC 2018 on pts/0
 [root@openshift ~]# oc whoami
 developer
@@ -136,8 +138,7 @@ Using project "myproject".
 system:admin
 ```
 
-Note! We need to use the root user account
-
+Note! We need to use the root user account.
 
 ## Accessing OpenShift Web console
 
@@ -154,7 +155,7 @@ Data will be discarded when cluster is destroyed
 
 ```
 
-Note! you need to run the command under root user
+Note! You need to run the command under root user.
 
 - Try to access openshift web console using the url:
 

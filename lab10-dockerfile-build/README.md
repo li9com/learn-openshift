@@ -1,7 +1,9 @@
 # lab10-dockerfile-build
+
 Lab 1 - Building applications from Dockerfile
 
 ## Files
+
 All files required for this lab are stored directly in this directory or in /vagrant/lab10-dockerfile-build directory of your vagrant machine
 
 ## Preparation

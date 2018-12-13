@@ -1,9 +1,11 @@
 # Learn OpenShift
+
 "Learn OpenShift" is a step by step hands-on guide which gives you some practical OpenShift-related examples
 
 ## Labs
+
 The repository gives a number of folders which proides all files required for a Lab.
-The following labs are included
+The following labs are included:
 
 Lab    | Description
 ------ | -----------
@@ -12,18 +14,20 @@ Lab 1  | Overview of the lab environment
 Lab 2  | Managing user projects
 Lab 3  | Managing Pods
 Lab 4  | Managing Services
-Lab 5  | Managing Routes 
+Lab 5  | Managing Routes
 Lab 6  | Application deployment with oc new-app
-Lab 7  | Injecting configuration data using config maps and secrets 
+Lab 7  | Injecting configuration data using config maps and secrets
 Lab 8  | Using OpenShift templates
 Lab 9  | Using persistent storage
 Lab 10 | Building application from Dockerfile
 Lab 11 | Building applications from source code
 
 ## Creating lab environment
+
 CentOS 7 minimal is required to deploy this lab environment.
 
 ### Virtual Machine
+
 The repository includes a Vagrantfile which deploys a VM with the following configuration:
 
 Option   | Value
@@ -61,6 +65,7 @@ The following software is required:
 - vim
 
 ### Starting lab environment
+
 The lab environment can be provisioned using Vagrant as follows:
 
 ```
@@ -77,7 +82,7 @@ Once VM is provisioned, you may connect to it using SSH as follows:
 vagrant ssh
 ```
 
-Note! You will be connected as the "vagrant" user which is allowed to use sudo to run commands under the root account:
+Note! You will be connected as the "vagrant" user which is allowed to use sudo to run commands under the root account, for example:
 
 ```
 sudo yum install -y epel-release
@@ -90,6 +95,7 @@ https://openshift.172.24.0.11.nip.io:8443/console/
 ```
 
 ## Authors
+
 Artemii Kropachev
 
 

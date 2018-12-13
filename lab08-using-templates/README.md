@@ -1,7 +1,9 @@
 # lab08-using-templates
+
 Lab 8 - Using Templates
 
 ## Files
+
 All files required for this lab are stored directly in this directory or in /vagrant/lab08-using-templates directory of your vagrant machine
 
 ## Preparation

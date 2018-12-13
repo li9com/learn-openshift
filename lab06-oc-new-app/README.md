@@ -1,7 +1,9 @@
 # lab06-oc-new-app
+
 Lab 6 - Application deployment using "oc new-app"
 
 ## Files
+
 All files required for this lab are stored directly in this directory or in /vagrant/lab06-oc-new-app directory of your vagrant machine
 
 ## Default routes
@@ -345,7 +347,7 @@ NAME        TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)             AGE
 svc/httpd   ClusterIP   172.30.169.172   <none>        8080/TCP,8443/TCP   42s
 ```
 
-Note! you should be able to see pod,rc,svc,dc and is entities
+Note! You should be able to see pod,rc,svc,dc and is entities.
 
 - Expose the httpd service
 
@@ -363,8 +365,8 @@ httpd     httpd-lab6.apps.172.24.0.11.nip.io             httpd      8080-tcp    
 ```
 
 - Try to access the application
-Note! It is up to you which method to use (curl or Web Browser)
 
+Note! It is up to you which method to use (curl or Web Browser).
 
 ## Using environment variables
 
@@ -435,7 +437,7 @@ Optional Settings:
 For more information, see https://github.com/sclorg/mariadb-container
 ```
 
-Note! the container requires a number of environent variables to start
+Note! The container requires a number of environent variables to start.
 
 -  Display all entities created for the service
 
@@ -470,7 +472,7 @@ service "mariadb" deleted
 imagestream "mariadb" deleted
 ```
 
-Note! the "is" resource is not deleted automatically.
+Note! The "is" resource is not deleted automatically.
 
 - Re-deploy mariadb service with all parameters
 
@@ -578,7 +580,7 @@ Events:
   Normal	DeploymentCreated	7m	deploymentconfig-controller	Created new replication controller "mariadb-1" for version 1
 ```
 
-Note! You can see environment variables
+Note! You can see environment variables.
 
 - Update mariadb deployment config as follows
 
@@ -666,7 +668,7 @@ httpd     1          1         1         config,image(httpd:2.4)
 mariadb   3          1         1         config,image(mariadb:10.2)
 ```
 
-Note! new revision is 3
+Note! New revision is 3.
 
 - Make sure that application has been redeployed
 
@@ -677,7 +679,7 @@ httpd-1-5nbw6     1/1       Running   0          33m
 mariadb-3-mgg29   1/1       Running   0          53s
 ```
 
-Note! the number "-3-" in the mariadb name represents revision number
+Note! The number "-3-" in the mariadb name represents revision number.
 
 ## Scale up and scale down applications
 

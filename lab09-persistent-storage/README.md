@@ -1,7 +1,9 @@
 # lab09-persistent-storage
+
 Lab 9 - Using persistent storage
 
 ## Files
+
 All files required for this lab are stored directly in this directory or in /vagrant/lab09-persistent-storage directory of your vagrant machine
 
 ## Preparation
@@ -21,6 +23,7 @@ oc new-project lab9
 ```
 
 ## Verifying Persistent Volumes (PV)
+
 By default, "oc cluster up" creates a number of PV. You may verify that PVs are available
 
 - Login as the "sysmem:admin" under the root account
@@ -93,7 +96,7 @@ Source:
 Events:            <none>
 ```
 
-Note! all volume data is stored at /var/lib/origin/openshift.local.pv/<pvname>
+Note! All volume data is stored at /var/lib/origin/openshift.local.pv/<pvname>.
 
 
 ## Creating Persistent Volume Claims (PVC)
@@ -127,9 +130,10 @@ pvc-web   Bound     pv0059    100Gi      RWO,ROX,RWX                   3s
 
 Note! The example above shows that pvc-web is bound to pv0059. This means that data will be located at /var/lib/origin/openshift.local.pv/pv0059
 
-Note! the PV may be different depending on your OpenShift cluster settings
+Note! The PV may be different depending on your OpenShift cluster settings
 
 ## Deploying a persistent application
+
 We are going to deploy an httpd container which data is persistent.
 
 - Deploy  httpd application
