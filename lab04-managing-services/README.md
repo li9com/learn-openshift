@@ -1,7 +1,9 @@
 # lab04-managing-services
+
 Lab 4 - Managing services
 
 ## Files
+
 All files required for this lab are stored directly in this directory or in /vagrant/lab04-managing-services/ directory of your vagrant machine
 
 ## Preparation
@@ -345,8 +347,7 @@ Server: Apache/2.4.34 (Red Hat) OpenSSL/1.0.2k-fips
 Server: Apache/2.4.34 (Red Hat) OpenSSL/1.0.2k-fips
 ```
 
-Note! We tried many times and we have not seen any jenkins answers
-
+Note! We tried many times and we have not seen any jenkins answers.
 
 ## Creating services manually
 
@@ -356,10 +357,11 @@ Note! We tried many times and we have not seen any jenkins answers
 cat service_httpd.yaml
 ```
 
-Note! service_httpd.yaml defines a service named httpd which uses app=httpd as the selector
+Note! File service_httpd.yaml defines a service named httpd which uses app=httpd as the selector.
 
 - Create  the httpd service
-Note! We already have http1 service
+
+Note! We already have http1 service.
 
 ```
 [vagrant@openshift lab04-managing-services]$ oc create -f service_httpd.yaml

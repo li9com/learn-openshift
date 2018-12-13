@@ -1,7 +1,9 @@
 # lab03-managing-pods
+
 Lab 3 - Managing pods
 
 ## Files
+
 All files required for this lab are stored directly in this directory or in /vagrant/lab03-managing-pods/ directory of your vagrant machine
 
 ## Preparation
@@ -99,11 +101,11 @@ FIELDS:
 pod/httpd created
 ```
 
-
 ## Getting pod details
 
 - Check status of the port using "oc get pod"
-Note! it is expected that Pod status changes from "ContainerCreating" to "Running"
+
+Note! It is expected that Pod status changes from "ContainerCreating" to "Running"
 
 ```
 [vagrant@openshift lab03-managing-pods]$ oc get pod
@@ -188,7 +190,7 @@ Events:
   Normal  Started    4m    kubelet, localhost  Started container
 ```
 
-Note! We need Pod IP address
+Note! We need Pod IP address.
 
 - Access Pod service
 
@@ -209,7 +211,7 @@ Note! We need Pod IP address
 				background-color: #fff;
 ```
 
-Note! This is the default welcome page for the image
+Note! This is the default welcome page for the image.
 
 - Export pod runtime configuration
 
@@ -353,7 +355,7 @@ Examples:
   oc delete pods --all
 ```
 
-- Delete the "httpd" pod 
+- Delete the "httpd" pod
 
 ```
 [vagrant@openshift lab03-managing-pods]$ oc delete pod httpd
@@ -367,7 +369,6 @@ pod "httpd" deleted
 No resources found.
 ```
 
-
 ## Executing a custom command inside pod
 
 - Create the httpd pod again
@@ -377,7 +378,7 @@ No resources found.
 pod/httpd created
 ```
 
-- Make sure that pod is started
+- Make sure that the pod is started
 
 ```
 [vagrant@openshift lab03-managing-pods]$ oc get pods
@@ -442,7 +443,7 @@ sh-4.2$ exit
 exit
 ```
 
-Note! You may execute another set of command
+Note! You may execute another set of command.
 
 - Check the "oc rsh -h"
 
@@ -494,7 +495,6 @@ Use "oc options" for a list of global command-line options (applies to all comma
 [vagrant@openshift lab03-managing-pods]$ oc rsh httpd cat /etc/redhat-release
 CentOS Linux release 7.6.1810 (Core)
 ```
-
 
 ## Getting pod logs
 
@@ -576,9 +576,9 @@ AH00558: httpd: Could not reliably determine the server's fully qualified domain
 ^C
 ```
 
-Note! -f updates output on the fly
-Note! you need to press CTRL + C to exit
+Note! Command line option -f updates output on the fly.
 
+Note! You need to press CTRL + C to exit.
 
 ## Cleanup
 
@@ -603,4 +603,3 @@ error: you do not have rights to view project "lab3-httpd".
 [vagrant@openshift lab03-managing-pods]$ oc get projects
 No resources found.
 ```
-

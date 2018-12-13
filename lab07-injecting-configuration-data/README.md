@@ -1,7 +1,9 @@
 # lab07-injecting-configuration-data
+
 Lab 7 - Injecting configuration data
 
 ## Files
+
 All files required for this lab are stored directly in this directory or in /vagrant/lab07-injecting-configuration-data directory of your vagrant machine
 
 ## Preparation
@@ -94,7 +96,7 @@ Use "oc options" for a list of global command-line options (applies to all comma
 secret "mysecret" created
 ```
 
-- Make sure that the "mysecret" has been created 
+- Make sure that the "mysecret" has been created
 
 ```
 [vagrant@openshift lab07-injecting-configuration-data]$ oc get secret mysecret
@@ -251,8 +253,8 @@ MYSQL_PREFIX=/opt/rh/rh-mariadb102/root/usr
 
 Note! These variables has been taken from the secret
 
-
 ## Creating config maps
+
 In this example, we will mount config map as a file on the filesystem. This may be useful for application configuration
 
 - Delete all OpenShift entities created previosly

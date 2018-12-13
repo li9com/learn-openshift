@@ -1,7 +1,9 @@
 # lab11-using-build-secrets
+
 Lab 1 - Building applications from Dockerfile
 
 ## Files
+
 All files required for this lab are stored directly in this directory or in /vagrant/lab11-using-build-secrets directory of your vagrant machine
 
 ## Preparation
@@ -73,8 +75,7 @@ Cloning "http://gitlab.demo.li9.com/root/tornadoapp.git" ...
 error: failed to fetch requested repository "http://gitlab.demo.li9.com/root/tornadoapp.git" with provided credentials
 ```
 
-Note! it is expected that application fails
-
+Note! It is expected that application fails.
 
 - Create a secret
 
@@ -84,7 +85,7 @@ oc create secret generic gitlab-student-access \
     --from-literal=password=PASSWORD
 ```
 
-Note! ask for  PASSWORD
+Note! Ask for PASSWORD.
 
 You will see the following
 
@@ -92,7 +93,7 @@ You will see the following
 secret/gitlab-student-access created
 ```
 
-Note! ask for PASSWORD
+Note! Ask for PASSWORD.
 
 - Attach secret as a build secret to the build resources
 

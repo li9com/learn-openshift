@@ -1,4 +1,5 @@
 # lab02-managing-projects
+
 Lab 2 - Managing projects
 
 ## Accessing VM
@@ -65,7 +66,6 @@ kubeconfig after being created
 
 Use "oc options" for a list of global command-line options (applies to all commands).
 ```
-
 
 - Create a new project named "lab2"
 
