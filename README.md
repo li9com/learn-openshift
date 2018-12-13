@@ -1,5 +1,5 @@
-# learn-openshift
-"Learn OpenShift" is a step by step hands-ob guide which gives you some practical OpenShift-related examples
+# Learn OpenShift
+"Learn OpenShift" is a step by step hands-on guide which gives you some practical OpenShift-related examples
 
 ## Labs
 The repository gives a number of folders which proides all files required for a Lab.
@@ -20,13 +20,11 @@ Lab 9  | Using persistent storage
 Lab 10 | Building application from Dockerfile
 Lab 11 | Building applications from source code
 
-
-
 ## Creating lab environment
 CentOS 7 minimal is required to deploy this lab environment.
 
 ### Virtual Machine
-The repsitory includes a Vagrantfile which deploys a VM with the following configuration option:
+The repository includes a Vagrantfile which deploys a VM with the following configuration:
 
 Option   | Value
 -------- | -----
@@ -40,13 +38,12 @@ Box      | centos/7
 
 The VM is customized as follows:
 - docker and git packages are installed
-- docker Linux groups is created
-- the vagrant user is a member of the docker Linux group (this allows to use Docker client under unprivileges user)
+- docker Linux group is created
+- the vagrant user is a member of the docker Linux group (this allows to use Docker client under unprivileged user)
 - OpenShift 3.11 repository is configured
 - OpenShift client utility is installed
-- OpebShift cluster is deployed using "oc cluster up"
+- OpenShift cluster is deployed using "oc cluster up"
 - OpenShift public url is set to openshift.172.24.0.11.nip.io
-
 
 ### Host machine requrements
 
@@ -63,7 +60,6 @@ The following software is required:
 - git
 - vim
 
-
 ### Starting lab environment
 The lab environment can be provisioned using Vagrant as follows:
 
@@ -75,7 +71,7 @@ vagrant up
 
 ### Connecting to Lab VM
 
-Once VM is provisioned, you may connect to VM using SSH as follows:
+Once VM is provisioned, you may connect to it using SSH as follows:
 
 ```
 vagrant ssh
@@ -92,7 +88,6 @@ You may access OpenShift console using the following URL:
 ```
 https://openshift.172.24.0.11.nip.io:8443/console/
 ```
-
 
 ## Authors
 Artemii Kropachev
