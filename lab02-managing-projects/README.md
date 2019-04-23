@@ -158,4 +158,42 @@ You have access to the following projects and can switch between them with 'oc p
     lab2-demo
 
 Using project "lab2" on server "https://localhost:8443".
+
+
+## Removing projects
+
+- Make sure that the project is here.
+
+``` 
+$ oc get projects
+NAME        DISPLAY NAME   STATUS
+lab2        Lab2           Active
+lab2-demo                  Active
 ```
+
+- Delete the project
+```
+$ oc delete project lab2-demo
+project.project.openshift.io "lab2-demo" deleted
+```
+
+- Sometimes OpenShift cannot delete all resources from the project. In that case it is better to make sure that those have been deleted beforehand.
+
+```
+$ oc delete all,sa,secrets,cm,pvc,route,svc,dc --all -n lab2
+serviceaccount "builder" deleted
+serviceaccount "default" deleted
+serviceaccount "deployer" deleted
+secret "builder-dockercfg-dx6dl" deleted
+secret "builder-token-x5pkc" deleted
+secret "default-token-sc5wk" deleted
+secret "default-token-zj5pr" deleted
+secret "deployer-token-r6ln5" deleted
+
+```
+and finally now we can delete the project
+```
+$ oc delete project lab2
+project.project.openshift.io "lab2" deleted
+```
+
