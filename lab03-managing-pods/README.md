@@ -215,8 +215,12 @@ Note! This is the default welcome page for the image.
 
 - Export pod runtime configuration
 
+You can check the actual configuration that was created for the pod
 ```
 [vagrant@openshift lab03-managing-pods]$ oc get pod httpd -o yaml
+```
+
+```yaml
 apiVersion: v1
 kind: Pod
 metadata:
