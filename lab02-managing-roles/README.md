@@ -76,13 +76,13 @@ view                                                                   8d
 Some of interesting cluster roles:
 - __cluster-admin__ - use this role to give a full access to the cluster
 - __cluster-reader__ - gives read-only access to most of resources of the cluster
-- __admin__ - is assigned to admins of project, projects' owners have by default
+- __admin__ - is assigned to admins of projects, projects' owners have it by default
 - __edit__ - gives permissions to manipulate resources within a project except the project itself
 
 ### Researching a role
 
 
-- Role __cluster-admin__: has all permissions on all resources enabled
+- Role __cluster-admin__ has all permissions on all resources enabled
 
 ```
 $ oc describe clusterrole.rbac cluster-admin
@@ -99,7 +99,7 @@ PolicyRule:
 ```
 
 
-- Role __edit__: has enabled only specific actions on the certain resources
+- Role __edit__ has enabled only specific actions on the certain resources
 
 ```
 $ oc describe clusterrole.rbac edit
