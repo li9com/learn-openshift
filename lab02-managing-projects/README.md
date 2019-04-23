@@ -158,7 +158,7 @@ You have access to the following projects and can switch between them with 'oc p
     lab2-demo
 
 Using project "lab2" on server "https://localhost:8443".
-
+```
 
 ## Removing projects
 
