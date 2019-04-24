@@ -6,9 +6,6 @@ Lab 13 - Using deployment configs for deploying applications
 
 All files required for this lab are stored directly in this directory or in _/vagrant/lab13-deployment-configs_ directory of your vagrant machine
 
-## Default routes
-
-The lab installation uses apps.172.24.0.11.nip.io as the default application domain.
 
 ## Preparation
 
@@ -279,11 +276,14 @@ $ exit
 Here we even don't need to know which login and passwords have been set. We can just use those environment variables.
 
 
-* Remove the deployment config
+* Cleaning up
 
 ```
 $ oc delete -f dc.yaml
 deploymentconfig.apps.openshift.io "database" deleted
+
+$ oc delete project lab13
+project.project.openshift.io "lab13" deleted
 ```
 
 ## Authors
