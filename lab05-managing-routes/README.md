@@ -373,20 +373,20 @@ jenkins-ssl   jenkins-ssl.apps.172.24.0.11.nip.io         jenkins    <all>     e
 
 ```
 $ oc describe route/jenkins-ssl
-Name:     jenkins-ssl
-Namespace:    lab05
-Created:    54 seconds ago
-Labels:     <none>
-Annotations:    <none>
-Requested Host:   jenkins-ssl.apps.172.24.0.11.nip.io
-        exposed on router router 54 seconds ago
-Path:     <none>
-TLS Termination:  edge
-Insecure Policy:  <none>
-Endpoint Port:    <all endpoint ports>
+Name:							jenkins-ssl
+Namespace:				lab05
+Created:					About a minute ago
+Labels:						encrypted=true
+Annotations:			<none>
+Requested Host:		jenkins-ssl.apps.172.24.0.11.nip.io
+			  						exposed on router router about a minute ago
+Path:							<none>
+TLS Termination:	edge
+Insecure Policy:	<none>
+Endpoint Port:		<all endpoint ports>
 
-Service:  jenkins
-Weight:   100 (100%)
+Service:	jenkins
+Weight:		100 (100%)
 Endpoints:  172.17.0.6:8080
 ```
 
@@ -400,6 +400,8 @@ Endpoints:  172.17.0.6:8080
 
 - Remove the "lab5" project
 
+
 ```
-oc delete project lab5
+$ oc delete pods,services,routes --all
+$ oc delete project lab5
 ```
