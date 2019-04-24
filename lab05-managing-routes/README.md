@@ -351,6 +351,7 @@ route.route.openshift.io "jenkins" deleted
 Using the same way we can create a secure route
 
 * Check configuration `cat ssl_route_jenkins.yaml`
+* Display the route definition `cat ssl_route_jenkins.yaml`
 * Create a secure route
 
 ```
@@ -395,6 +396,42 @@ Endpoints:  172.17.0.6:8080
   - ```$ oc delete route jenkins-ssl```
   - ```$ oc delete -f ssl_route_jenkins.yaml```
   - ```$ oc delete route -l encrypted=true```
+
+## Other options for creating routes
+
+The routes can also be created from a commond line like this:
+
+* Not a secure route
+```
+$ oc expose service jenkins --name=jenkins --hostname=jenkins.apps.172.24.0.11.nip.io
+```
+
+* Secured routes
+
+```
+$ oc create route edge jenkins-ssl-edge --service=jenkins --hostname=jenkins-ssl-edge.apps.172.24.0.11.nip.io
+```
+
+```
+$ oc create route reencrypt jenkins-ssl-reencrypt --service=jenkins --hostname=jenkins-ssl-reencrypt.apps.172.24.0.11.nip.io
+```
+
+```
+$ oc create route passthrough jenkins-ssl-passthrough --service=jenkins --hostname=jenkins-ssl-passthrough.apps.172.24.0.11.nip.io
+```
+
+* Display the routes
+
+```
+$ oc get route
+NAME                      HOST/PORT                                         PATH      SERVICES   PORT      TERMINATION   WILDCARD
+jenkins                   jenkins.apps.172.24.0.11.nip.io                             jenkins    8080                    None
+jenkins-ssl-edge          jenkins-ssl-edge.apps.172.24.0.11.nip.io                    jenkins    <all>     edge          None
+jenkins-ssl-passthrough   jenkins-ssl-passthrough.apps.172.24.0.11.nip.io             jenkins    <all>     passthrough   None
+jenkins-ssl-reencrypt     jenkins-ssl-reencrypt.apps.172.24.0.11.nip.io               jenkins    <all>     reencrypt     None
+```
+Jenkins has not been configured to support SSL so in that case the routes __jenkins-ssl-passthrough__ and __jenkins-ssl-reencrypt__ will not work properly.
+
 
 ## Cleanup
 
