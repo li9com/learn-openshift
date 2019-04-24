@@ -126,6 +126,9 @@ Objects:
 
 ```
 [vagrant@openshift lab08-using-templates]$ oc get template jenkins-persistent -n openshift -o yaml
+```
+
+```yaml
 apiVersion: template.openshift.io/v1
 kind: Template
 labels:
@@ -348,7 +351,7 @@ Note! This template is given for demosntration only. We are not going to use thi
 - Check existing gogs template
 
 ```
-cat gogs_template.yaml
+$ cat gogs_template.yaml
 ```
 
 - List template parameters
@@ -477,6 +480,9 @@ httpd     httpd-lab8.apps.172.24.0.11.nip.io             httpd      8080-tcp    
 
 ```
 [vagrant@openshift lab08-using-templates]$ cat myhttpd_template.yaml
+```
+
+```yaml
 apiVersion: v1
 kind: Template
 metadata:
