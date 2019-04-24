@@ -399,7 +399,7 @@ Endpoints:  172.17.0.6:8080
 
 ## Other options for creating routes
 
-The routes can also be created from a commond line like this:
+The routes can also be created from a command line like this:
 
 * Not a secure route
 ```
