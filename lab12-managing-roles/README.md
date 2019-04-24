@@ -1,6 +1,6 @@
-# lab02-managing-roles
+# lab12-managing-roles
 
-Lab 2 - Managing roles
+Lab 12 - Managing roles
 
 ## Roles and Cluster Roles
 
