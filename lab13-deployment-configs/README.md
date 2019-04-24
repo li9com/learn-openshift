@@ -121,8 +121,7 @@ spec:
       schedulerName: default-scheduler
       securityContext: {}
       terminationGracePeriodSeconds: 30
-  test: false
-  triggers:
+  test: false triggers:
   - type: ConfigChange
 status:
   availableReplicas: 0
@@ -152,7 +151,7 @@ Since we use the publicly available image from __docker.io__ we can find there a
   ``` 
 
   ** add a volume
-  ```
+  ```yaml
       volumes:
         - name: datadir
           type: emptyDir
@@ -160,7 +159,7 @@ Since we use the publicly available image from __docker.io__ we can find there a
 
   and in the specification of the database container, put this
 
-  ```
+  ```yaml
       volumeMounts:
         - name: datadir
           mountPoint: /var/lib/mysql
