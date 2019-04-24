@@ -232,6 +232,9 @@ Endpoints:	172.17.0.6:8080
 
 ```
 [vagrant@openshift lab05-managing-routes]$ oc get route jenkins -o yaml
+```
+
+```yaml
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
@@ -343,6 +346,55 @@ Endpoints:	172.17.0.6:8080
 route.route.openshift.io "jenkins" deleted
 ```
 
+## Create a secure route
+
+Using the same way we can create a secure route
+
+* Check configuration `cat ssl_route_jenkins.yaml`
+* Create a secure route
+
+```
+[vagrant@openshift lab05-managing-routes]$ oc create -f ssl_route_jenkins.yaml
+route.route.openshift.io/jenkins-ssl created
+```
+
+* Try to access the application as _https://jenkins-ssl.apps.172.24.0.11.nip.io_
+
+* Get the routes
+
+```
+$ oc get route
+NAME          HOST/PORT                         PATH      SERVICES   PORT      TERMINATION   WILDCARD
+jenkins       jenkins.apps.172.24.0.11.nip.io             jenkins    <all>                   None
+jenkins-ssl   jenkins-ssl.apps.172.24.0.11.nip.io         jenkins    <all>     edge          None
+```
+
+* Get the route details
+
+```
+$ oc describe route/jenkins-ssl
+Name:     jenkins-ssl
+Namespace:    lab05
+Created:    54 seconds ago
+Labels:     <none>
+Annotations:    <none>
+Requested Host:   jenkins-ssl.apps.172.24.0.11.nip.io
+        exposed on router router 54 seconds ago
+Path:     <none>
+TLS Termination:  edge
+Insecure Policy:  <none>
+Endpoint Port:    <all endpoint ports>
+
+Service:  jenkins
+Weight:   100 (100%)
+Endpoints:  172.17.0.6:8080
+```
+
+* Delete the route by one of these ways
+
+  - ```$ oc delete route jenkins-ssl```
+  - ```$ oc delete -f ssl_route_jenkins.yaml```
+  - ```$ oc delete route -l encrypted=true```
 
 ## Cleanup
 
