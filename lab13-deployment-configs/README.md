@@ -464,7 +464,7 @@ database-1-pk5l6   0/1       Terminating   0         14m
 database-1-pk5l6   0/1       Terminating   0         14m
 ```
 
-oc just see the status of pods at a moment of time
+or just see the status of pods at a moment of time
 ```
 $ oc get pod
 NAME               READY     STATUS    RESTARTS   AGE
@@ -533,7 +533,6 @@ We can see that variables _MYSQL_USER_, _MYSQL_PASSWORD_ have here old values.
 
 * Going back to a previous configuration
 
-Keep in mind that latest Pod has been destroyed and a new one created thus it got a new name.
 
 ```
 $ oc rollout undo dc/database --to-revision=1
@@ -548,6 +547,8 @@ ERROR 1045 (28000): Access denied for user 'newuser'@'localhost' (using password
 command terminated with exit code 1
 ```
 
+Keep in mind that this operation destroys the current pod and creates a new one thus it got a new name.
+
 Trying the initial login and passwords - they work
 
 ```
@@ -558,7 +559,7 @@ demobase
 information_schema
 ```
 
-And, since, the current configuration was also update, a new historical state is also added
+And, since, the current configuration was update, a new historical state is also added
 
 ```
 $ oc rollout history dc/database
