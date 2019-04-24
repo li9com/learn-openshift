@@ -264,7 +264,6 @@ deploymentconfig.apps.openshift.io/database   1          1         1         con
 
 ```
 $ oc rsh database-1-tmn25 /bin/sh
-
 ```
 and run following
 
