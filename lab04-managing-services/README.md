@@ -222,6 +222,9 @@ Note! Make sure that Selector value is "app=httpd"
 
 ```
 [vagrant@openshift lab04-managing-services]$ oc get svc httpd-1 -o yaml
+```
+
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
