@@ -34,7 +34,7 @@ to build a new example application in Ruby.
 - Check the content of pod_httpd1.yaml
 
 ```
-cat pod_httpd-1.yaml
+$ cat pod_httpd-1.yaml
 ```
 
 - Create an httpd pod
@@ -261,9 +261,7 @@ $ cat pod_httpd2.yaml
 
 Note! Make sure that label _app=httpd_ is there.
 
-Note! We are now going to add a second httpd pod with the same label _app=httpd_. This doens't make sense in the real world but it is still acceptable from the Lab perspective.
-
-Note! Again, this is incorrect for the real world. Do not perform that in production
+Note! We are now going to add a second httpd pod with the same label _app=httpd_. 
 
 - Create a _httpd-2_ pod
 
@@ -318,7 +316,7 @@ httpd-1
 httpd-2
 ```
 
-- Delete pod _httpd-1_ and make sure that service returns only _httpd-2_ answer
+- Delete pod _httpd-1_ and make sure that service returns only _httpd-2_ answer `oc delete pod httpd-1`
 
 ```
 [vagrant@openshift lab04-managing-services]$ for ((i=0; i<10; i++)); do curl 172.30.44.132:8080; done
@@ -343,7 +341,7 @@ Note! We tried many times and we have not seen any _httpd-1_ answers.
 - Check *service_httpd.yaml*
 
 ```
-cat service_httpd.yaml
+$ cat service_httpd.yaml
 ```
 
 Note! File *service_httpd.yaml* defines a service named _httpd_ which uses _app=httpd_ as the selector.
