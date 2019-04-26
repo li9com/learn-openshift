@@ -7,7 +7,7 @@ This lab demonstrates usage of __S2I__ tool.
 * The lab should be done on a linux host with running _docker_ service.
 * A Docker registry should exist and the client should be able to pull and push images from/to it.
 
-* ___S2I___ tool should be downloaded and put into /usr/bin directory:
+* ___S2I___ tool should be downloaded and put into _$HOME_ directory:
 
 ```
 $ curl -sLo - https://github.com/openshift/source-to-image/releases/download/v1.1.13/source-to-image-v1.1.13-b54d75d3-linux-amd64.tar.gz | tar -C $HOME -xzf -
@@ -41,10 +41,12 @@ exit 0
 
 ### Script s2i/bin/assemble
 
-This script is executed when the image on the second stage - building an app image. Our application is a python script and it don't needed to be compiled or taken some other actions so just leave it empty. Return code must be zero.
+This script is executed when the image on the second stage - building an app image. The current context is  __app/__ directory as it will be used in __s2i build__ command below, so all files should be referenced inside this directory.
 
 ```bash
 #!/bin/bash
+
+install -m 0644 main.py /app/main.py
 
 exit 0
 ```
