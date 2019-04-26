@@ -1,6 +1,0 @@
-#!/bin/bash
-
-FLASK_APP=main.py flask run --debugger -h 0.0.0.0 -p $LISTEN_PORT
-
-exit 0
-

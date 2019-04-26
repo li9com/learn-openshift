@@ -1,6 +1,0 @@
-#!/bin/bash
-
-install -m 0644 main.py /app/main.py
-
-exit 0
-
