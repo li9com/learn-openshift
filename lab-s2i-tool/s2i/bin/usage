@@ -1,0 +1,13 @@
+#!/bin/bash
+
+cat << EOF 
+
+Usage:
+  Put the sources of your Flask application into /app directory.
+  File main.py must exist as /app/main.py. This is an entry point 
+  to your app.
+
+EOF
+
+exit 0
+
