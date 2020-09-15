@@ -27,13 +27,9 @@ oc new-project lab11
 - Try to build the demo application from a private repository
 
 ```
-[vagrant@openshift lab11-using-build-secrets]$ oc new-app http://gitlab.demo.li9.com/root/tornadoapp.git
-Username for 'http://gitlab.demo.li9.com': student
-Password for 'http://student@gitlab.demo.li9.com':
-Username for 'http://gitlab.demo.li9.com': student
-Password for 'http://student@gitlab.demo.li9.com':
+[vagrant@openshift lab11-using-build-secrets]$ oc new-app --strategy docker http://gitlab.demo.li9.com/root/tornadoapp.git
 warning: Cannot check if git requires authentication.
---> Found image f00aae8 (46 hours old) in image stream "openshift/python" under tag "3.6" for "python"
+--> Found image f00aae8 (4 months old) in image stream "openshift/python" under tag "3.6" for "python"
 
     Python 3.6
     ----------
@@ -80,25 +76,21 @@ Note! It is expected that application fails.
 - Create a secret
 
 ```
-oc create secret generic gitlab-student-access \
-    --from-literal=username=student \
-    --from-literal=password=PASSWORD
+oc create secret generic gitlab --from-literal=username=USERNAME --from-literal=password=PASSWORD
 ```
 
-Note! Ask for PASSWORD.
+Note! Ask for USERNAME and PASSWORD.
 
 You will see the following
 
 ```
-secret/gitlab-student-access created
+secret/gitlab created
 ```
-
-Note! Ask for PASSWORD.
 
 - Attach secret as a build secret to the build resources
 
 ```
-[vagrant@openshift lab11-using-build-secrets]$ oc set build-secret --source bc/tornadoapp gitlab-student-access
+[vagrant@openshift lab11-using-build-secrets]$ oc set build-secret --source bc/tornadoapp gitlab
 buildconfig.build.openshift.io/tornadoapp secret updated
 
 
@@ -193,7 +185,7 @@ Pushed 6/11 layers, 55% complete
 Push successful
 ```
 
-- Expose the application and make sure that it frameworks
+- Expose the application and make sure that it works
 
 ```
 [vagrant@openshift lab11-using-build-secrets]$ oc expose svc tornadoapp
