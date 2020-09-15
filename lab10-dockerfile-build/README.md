@@ -29,7 +29,7 @@ oc new-project lab10
 - Build the application with custom name
 
 ```
-[vagrant@openshift ~]$ oc new-app --name demo https://github.com/li9com/tornadoapp
+[vagrant@openshift ~]$ oc new-app --name demo --strategy docker https://github.com/li9com/tornadoapp
 --> Found image f00aae8 (46 hours old) in image stream "openshift/python" under tag "3.6" for "python"
 
     Python 3.6
