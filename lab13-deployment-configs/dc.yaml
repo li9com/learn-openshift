@@ -1,0 +1,74 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  creationTimestamp: 2019-04-24T01:34:27Z
+  generation: 1
+  name: database
+  namespace: lab13
+  resourceVersion: "686061"
+  selfLink: /apis/apps.openshift.io/v1/namespaces/lab13/deploymentconfigs/database
+  uid: 1942b44b-6631-11e9-b07d-124d3830dbee
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    deployment-config.name: database
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        deployment-config.name: database
+    spec:
+### define a volume
+      volumes:
+        - name: datadir
+          type: emptyDir
+### end
+      containers:
+      - image: docker.io/mysql
+        imagePullPolicy: Always
+        name: default-container
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+### attaching a volume to the container
+        volumeMounts:
+          - name: datadir
+            mountPath: /var/lib/mysql
+### end
+### environment variables
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: rootpass
+        - name: MYSQL_DATABASE
+          value: demobase
+        - name: MYSQL_USER
+          value: demouser
+        - name: MYSQL_PASSWORD
+          value: demopass
+### end
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
+  triggers:
+  - type: ConfigChange
+status:
+  availableReplicas: 0
+  latestVersion: 0
+  observedGeneration: 0
+  replicas: 0
+  unavailableReplicas: 0
+  updatedReplicas: 0

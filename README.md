@@ -21,6 +21,8 @@ Lab 8  | Using OpenShift templates
 Lab 9  | Using persistent storage
 Lab 10 | Building application from Dockerfile
 Lab 11 | Building applications from source code
+Lab 12 | Use roles to give permission
+Lab 13 | Deploying applications from deployment configs
 
 ## Creating lab environment
 

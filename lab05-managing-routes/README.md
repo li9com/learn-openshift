@@ -232,6 +232,9 @@ Endpoints:	172.17.0.6:8080
 
 ```
 [vagrant@openshift lab05-managing-routes]$ oc get route jenkins -o yaml
+```
+
+```yaml
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
@@ -343,11 +346,99 @@ Endpoints:	172.17.0.6:8080
 route.route.openshift.io "jenkins" deleted
 ```
 
+## Create a secure route
+
+Using the same way we can create a secure route
+
+* Check configuration `cat ssl_route_jenkins.yaml`
+* Display the route definition `cat ssl_route_jenkins.yaml`
+* Create a secure route
+
+```
+[vagrant@openshift lab05-managing-routes]$ oc create -f ssl_route_jenkins.yaml
+route.route.openshift.io/jenkins-ssl created
+```
+
+* Try to access the application as _https://jenkins-ssl.apps.172.24.0.11.nip.io_
+
+* Get the routes
+
+```
+$ oc get route
+NAME          HOST/PORT                         PATH      SERVICES   PORT      TERMINATION   WILDCARD
+jenkins       jenkins.apps.172.24.0.11.nip.io             jenkins    <all>                   None
+jenkins-ssl   jenkins-ssl.apps.172.24.0.11.nip.io         jenkins    <all>     edge          None
+```
+
+* Get the route details
+
+```
+$ oc describe route/jenkins-ssl
+Name:							jenkins-ssl
+Namespace:				lab05
+Created:					About a minute ago
+Labels:						encrypted=true
+Annotations:			<none>
+Requested Host:		jenkins-ssl.apps.172.24.0.11.nip.io
+			  						exposed on router router about a minute ago
+Path:							<none>
+TLS Termination:	edge
+Insecure Policy:	<none>
+Endpoint Port:		<all endpoint ports>
+
+Service:	jenkins
+Weight:		100 (100%)
+Endpoints:  172.17.0.6:8080
+```
+
+* Delete the route by one of these ways
+
+  - ```$ oc delete route jenkins-ssl```
+  - ```$ oc delete -f ssl_route_jenkins.yaml```
+  - ```$ oc delete route -l encrypted=true```
+
+## Other options for creating routes
+
+The routes can also be created from a command line like this:
+
+* Not a secure route
+```
+$ oc expose service jenkins --name=jenkins --hostname=jenkins.apps.172.24.0.11.nip.io
+```
+
+* Secured routes
+
+```
+$ oc create route edge jenkins-ssl-edge --service=jenkins --hostname=jenkins-ssl-edge.apps.172.24.0.11.nip.io
+```
+
+```
+$ oc create route reencrypt jenkins-ssl-reencrypt --service=jenkins --hostname=jenkins-ssl-reencrypt.apps.172.24.0.11.nip.io
+```
+
+```
+$ oc create route passthrough jenkins-ssl-passthrough --service=jenkins --hostname=jenkins-ssl-passthrough.apps.172.24.0.11.nip.io
+```
+
+* Display the routes
+
+```
+$ oc get route
+NAME                      HOST/PORT                                         PATH      SERVICES   PORT      TERMINATION   WILDCARD
+jenkins                   jenkins.apps.172.24.0.11.nip.io                             jenkins    8080                    None
+jenkins-ssl-edge          jenkins-ssl-edge.apps.172.24.0.11.nip.io                    jenkins    <all>     edge          None
+jenkins-ssl-passthrough   jenkins-ssl-passthrough.apps.172.24.0.11.nip.io             jenkins    <all>     passthrough   None
+jenkins-ssl-reencrypt     jenkins-ssl-reencrypt.apps.172.24.0.11.nip.io               jenkins    <all>     reencrypt     None
+```
+Jenkins has not been configured to support SSL so in that case the routes __jenkins-ssl-passthrough__ and __jenkins-ssl-reencrypt__ will not work properly.
+
 
 ## Cleanup
 
 - Remove the "lab5" project
 
+
 ```
-oc delete project lab5
+$ oc delete pods,services,routes --all
+$ oc delete project lab5
 ```
